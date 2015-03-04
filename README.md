@@ -78,4 +78,4 @@ view `tail -f` of spider log
 
 Example:
 
-	fag logs:spider=dmoz.com,job=66
+	fab logs:spider=dmoz.com,job=66
