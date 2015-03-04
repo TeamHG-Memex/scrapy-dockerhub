@@ -1,0 +1,55 @@
+FROM ubuntu:14.04
+
+ENV DEBIAN_FRONTEND noninteractive
+
+# Base system packages
+RUN apt-get update --fix-missing
+RUN apt-get install -y \
+    python \
+    python-pip \
+    python-dev \
+    libxml2-dev \
+    libxslt-dev \
+    libffi-dev \
+    libssl-dev \
+    git
+
+# Base python packages
+RUN pip install \
+    scrapy>=0.24
+
+
+# Use this for development
+ADD . /app
+
+# For production, clone spiders repository
+# git clone git+https://repository.url app
+
+
+# Create data directory for items, logs, files and job
+RUN mkdir /data
+
+
+# Uncomment to allow installing from private github repos
+# TODO: ssh-agent forwarding
+
+# RUN mkdir -p /root/.ssh
+# ADD id_rsa /root/.ssh/id_rsa
+# RUN chmod 700 /root/.ssh/id_rsa
+# RUN echo "Host github.com StrictHostKeyChecking no" \
+#     >> /root/.ssh/config
+
+
+# Install app requirements
+RUN touch /app/requirements.txt
+RUN pip install -r /app/requirements.txt
+
+
+# Patch settings to enable DockerhubExtension
+RUN pip install /app/scrapy-dockerhub.tar.gz
+RUN dockerhub-patch-settings /app
+
+
+EXPOSE 6023 6800
+
+WORKDIR /app
