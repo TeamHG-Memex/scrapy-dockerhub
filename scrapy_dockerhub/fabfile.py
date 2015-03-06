@@ -101,7 +101,7 @@ def schedule(spider, args=''):
         '-v {logs_path}:/data/log.log '
         '-v {files_dir}:/data/files '
         'scrapy-{project} '
-        'scrapy crawl {spider} {args}'
+        'scrapy crawl {spider} {args} '
         '-s FILES_DIR=/data/files '
         '-s JOB_PATH=/data/job '
         '-o /data/items.jl '
